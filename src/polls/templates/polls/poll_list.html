@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <h1>Polls</h1>
+    <a href="{% url 'polls:poll_create' %}">New Poll</a>
+    <hr>
+    <table>
+        <thead>
+            <th>Num</th>
+            <th>Name</th>
+        </thead>
+        <tbody>
+            {% for poll in polls %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'polls:poll_detail' pk=poll.pk %}">{{ poll.title }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
