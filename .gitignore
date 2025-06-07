@@ -4,3 +4,4 @@ db.sqlite3
 src/polls/migrations/*
 !src/polls/migrations/__init__.py
 
+secrets.json
