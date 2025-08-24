@@ -1,0 +1,12 @@
+# Version control
+.git
+.gitignore
+
+# Python
+__pycache__/
+
+pollsenv/
+env/
+*.log
+*.sqlite3
+.DS_Store

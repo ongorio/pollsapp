@@ -11,35 +11,37 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-from pollapp.secrets import get_secrets
-from django.core.exceptions import ImproperlyConfigured
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES_DIR = BASE_DIR / 'templates'
-SECRETS_FILE = BASE_DIR / 'pollapp' / 'secrets.json'
+ENV_FILE = BASE_DIR / 'pollapp' / 'env' / '.env'
 
-
-# Load Secrets
-
-if not SECRETS_FILE.exists():
-    raise ImproperlyConfigured('Missing secrets File')
-
-SECRETS = get_secrets(SECRETS_FILE)
-
+env = environ.Env(
+    DEBUG=(bool, False),
+    SECRET_KEY=str,
+    ALLOWED_HOSTS=(list, []),
+    DB_NAME=str,
+    DB_USER=str,
+    DB_PASSWORD=str,
+    DB_HOST=str,
+    DB_PORT=int,
+)
+environ.Env.read_env(ENV_FILE)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = SECRETS['SECRET_KEY']
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = SECRETS['DEBUG']
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = SECRETS['ALLOWED_HOSTS']
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -89,8 +91,12 @@ WSGI_APPLICATION = 'pollapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
 
